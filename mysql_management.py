@@ -14,12 +14,13 @@ def connect_databases(host_name, user_name, password_name, name_database):
         ) as connection:
             while True:
                 query = input("Enter query: ")
-                cursor = connection.cursor()
-                cursor.execute(query)
-                for query in cursor:
-                    print(query)
-                if query == 'close':
-                    close_database()
+                try:
+                    with connection.cursor() as cursor:
+                        cursor.execute(query)
+                        for query in cursor:
+                            print(query)
+                except Error as err:
+                    print(f"Error: {err}")
 
         # Горячие клавиша для работы с MySQL БД
         # ================================================================

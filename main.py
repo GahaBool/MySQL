@@ -1,39 +1,39 @@
 import keyboard
 from mysql.connector import connect, Error, errorcode
 
+from main_app import create_table, connection_db
 from mysql_management import connect_databases
+from text import text_main_menu , text_main_app
 
 #Основное меню по управлению приложения
 #================================================================
 def main_menu():
-    while True:
-        print("""
-MENU:
-    1.database management
-    2.wor
+    print(text_main_menu)
+    main_line = input("Enter: ").lower()
 
-Enter EXIT or press CTRL+Q to exit!
-                    """)
+    if main_line == '1':
+        # Подключение к серверу MySQL таблицы
+        # ===============================================================
+        host = "localhost"
+        User_name = input("Enter user name: ")
+        Password_user = input("Enter user passoword: ")
+        choose_databases = input("Enter database: ")
+
+        connect_databases(host, User_name, Password_user, choose_databases)
+
+    elif main_line == '2':
+        print(text_main_app)
         main_line = input("Enter: ").lower()
 
         if main_line == '1':
-            # Подключение к серверу MySQL таблицы
-            # ===============================================================
-            host = "localhost"
-            User_name = input("Enter user name: ")
-            Password_user = input("Enter user passoword: ")
-            choose_databases = input("Enter database: ")
+            create_table(connection_db)
 
-            connect_databases(host, User_name, Password_user, choose_databases)
+    if main_line == 'exit':
+        exit_program()
 
-        elif main_line == '2':
-            pass
-
-        elif main_line == 'exit':
-            exit_program()
-
-        else:
-            print("Нет такой опции попробуйте еще раз!")
+    else:
+        print("Нет такой опции попробуйте еще раз!")
+        main_menu()
 
 #Добавление горячей клавиши для завершение программы
 #================================================================

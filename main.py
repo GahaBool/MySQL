@@ -1,46 +1,47 @@
 import keyboard
 from mysql.connector import connect, Error, errorcode
+from menu_for_cmd import choise_work_space
 
-from main_app import create_table, connection_db
-from mysql_management import connect_databases
-from text import text_main_menu , text_main_app
+#Подключение к базам MySQL
+#================================================================
+def connection_db():
+    try:
+        connection = connect(host='localhost',
+                             user='root',
+                             password='2wsx$RFV',
+                             db='finance',)
+        print("successfully connected...")
+        print("################################################################")
+    except Error as err:
+        print(f"The error '{err}' occurred")
+    return connection
 
-#Основное меню по управлению приложения
+connection = connection_db()#Для того что бы проще работать с данными.
+
+#Главное меню
 #================================================================
 def main_menu():
-    print(text_main_menu)
-    main_line = input("Enter: ").lower()
 
-    if main_line == '1':
-        # Подключение к серверу MySQL таблицы
-        # ===============================================================
-        host = "localhost"
-        User_name = input("Enter user name: ")
-        Password_user = input("Enter user passoword: ")
-        choose_databases = input("Enter database: ")
+    choise_work_space(connection)
 
-        connect_databases(host, User_name, Password_user, choose_databases)
-
-    elif main_line == '2':
-        print(text_main_app)
-        main_line = input("Enter: ").lower()
-
-        if main_line == '1':
-            create_table(connection_db)
-
-    if main_line == 'exit':
+    if main_line == "exit":
         exit_program()
 
     else:
-        print("Нет такой опции попробуйте еще раз!")
+        print("\nThere is no such menu option!")
+        print("Try again...")
         main_menu()
+
+    connection.close()
 
 #Добавление горячей клавиши для завершение программы
 #================================================================
 def exit_program():
     print("\nExit program...")
     quit()
+
 keyboard.add_hotkey("ctrl+q", exit_program)
+
 
 #
 #================================================================

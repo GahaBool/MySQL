@@ -1,15 +1,25 @@
 text_main_menu = """
-MENU:
-    1.Database management
-    2.Budgeting App
-
+MAIN MENU:
+    1. Table Menu
+    2. Deposit Menu
+    
 Enter EXIT or press CTRL+Q to exit!
-                    """
+"""
 
-text_main_app = """
-MAIN APP:
+menu_work_table = """
+Table MENU:
     1.New tables
-    2.Make a deposit
+    2.Delete table
+    
+Enter BACK or press CTRL+1 to exit!
+"""
 
-Enter EXIT or press CTRL+Q to exit!
-                    """
+menu_work_deposit = """
+DEPOSIT MENU:
+    1.Make a deposit
+    2.Delete deposit
+    3.Show all deposits
+    4.Sum all deposit
+    
+Enter BACK or press CTRL+1 to exit!
+"""

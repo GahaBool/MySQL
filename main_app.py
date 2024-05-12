@@ -2,27 +2,6 @@ import re
 import datetime
 
 from mysql.connector import connect, Error
-from text import text_main_app
-
-def connection_with_database(host_name, user_name, password_name, database_name):
-    try:
-        connection = connect(host = host_name, user = user_name, password = password_name, database = database_name)
-        print("successfully connected...")
-        print("################################################################")
-    except Error as err:
-        print(f"The error '{err}' occurred")
-    return connection
-
-
-def work_query(connection, query):
-
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            for query in cursor:
-                print(query)
-    except Error as err:
-        print(f"The error '{err}' occurred")
 
 
 def create_table(connection):
@@ -38,6 +17,7 @@ def create_table(connection):
         CREATE TABLE IF NOT EXISTS `{table_name}` (
           id INT AUTO_INCREMENT PRIMARY KEY,
           deposit_name VARCHAR(255) NOT NULL,
+          amount_deposit DECIMAL(10, 2),
           deposit_time TIME NOT NULL,
           deposit_date DATE NOT NULL,
           description TEXT
@@ -52,7 +32,9 @@ def create_table(connection):
     except Error as err:
         print(f"The error '{err}' occurred")
 
-def drop_table(connection, table_name):
+
+def delete_table(connection):
+    table_name = input("Enter delete table name: ")
 
     # Валидация имени таблицы через простое регулярное выражение
     if not re.match(r'^[A-Za-z0-9_]+$', table_name):
@@ -71,21 +53,24 @@ def drop_table(connection, table_name):
     except Error as err:
         print(f"The error '{err}' occurred")
 
+
 def make_deposit(connection):
     database = input("Enter database name: ")
 
     ds_name = input("Enter name deposit: ")
+    amount = int(input("Enter amount deposit: "))
     date = datetime.datetime.today().strftime("%Y-%m-%d")
     time = datetime.datetime.today().strftime("%H:%M")
     dc_name = input("Enter a description of the deposit: ")
 
     try:
         with connection.cursor() as cursor:
-            cursor.execute(f"""INSERT INTO {database} (deposit_name, deposit_time, deposit_date, description) VALUES ('{ds_name}', '{time}', '{date}', '{dc_name}')""")
+            cursor.execute(f"""INSERT INTO {database} (deposit_name, amount_deposit, deposit_time, deposit_date, description) VALUES ('{ds_name}', '{amount}', '{time}', '{date}', '{dc_name}')""")
             connection.commit()
             print("depocit created successfully")
     except Error as err:
         print(f"The error '{err}' occurred")
+
 
 def delete_deposit(connection):
 
@@ -101,7 +86,28 @@ def delete_deposit(connection):
         print(f"The error '{err}' occurred")
 
 
-connection_db = connection_with_database('localhost', 'root', '2wsx$RFV', 'finance')
+def sum_deposit(connection):
+
+    name_table = input("Enter name table: ")
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(f"""SELECT SUM(amount_deposit) FROM {name_table}""")
+            for query in cursor:
+                print(query)
+    except Error as err:
+        print(f"The error '{err}' occurred")
+
+def show_deposit(connection):
+
+    name_table = input("Enter name table: ")
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(f"""SELECT * FROM {name_table}""")
+            for query in cursor:
+                print(query)
+    except Error as err:
+        print(f"The error '{err}' occurred")
 
 
-connection_db.close()
